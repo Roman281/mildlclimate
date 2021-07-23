@@ -1,0 +1,355 @@
+<?php 
+ini_set("auto_detect_line_endings", true);
+/*define('ROOT', dirname(__FILE__));*/ // Создаем констанну (Адрес корневой папки парсера).
+$upOne = realpath(__DIR__.'/..'); 
+$upTwo = realpath(__DIR__.'/../../..'); 
+
+
+
+    // Подключаем авто-загрузчик классов.
+require ($upOne . '/vendor/autoload.php');
+require ($upOne  . '/vendor/composer/db1.php');
+require ($upOne  . '/vendor/composer/phpQuery.php');
+require ($upOne  . '/vendor/composer/DBMysqli.php');
+
+require ($upOne  . '/parseMethods2/parsdcline.php');
+/*require ($upOne  . '/parseMethods2/parsdcline1.php');*/
+
+$db = new DB('127.0.0.1','root','', 'weatherinhome', '3306');
+/*$db = new DB('localhost','wimcom_comwim','db301020cart', 'wimcom_webpr', '3306');*/
+
+
+
+
+
+
+
+$url =  'https://opt.dclink.com.ua/login.htm?back=/';
+
+
+
+
+
+/*-------------------------------------------*/
+$choiseprice = array(
+    
+           
+          95 => 'https://smartvent.com.ua/g28504970-pryamougolnye-kanalnye-ventilyatory',
+
+         
+);
+
+
+
+/*$dateFilter = $_POST;
+
+  $mainfilter =$dateFilter['tablearr'];
+
+
+ $exicut1 = array_filter($mainfilter, function($v, $k) {
+    return  $v == "true";
+}, ARRAY_FILTER_USE_BOTH);*/  /*через ajax передавалось адрес таблиц, которые нужно спарсить*/
+
+
+
+
+
+
+
+
+
+
+
+function curl_get_content1($url, $choiseprice, $db){
+
+ 
+ $post_data = 'login=%DD%EB%E5%EA%F2%F0%EE%EC%E8%F0+%28%C4%ED%E5%EF%F0%29&passw=w48E3v2b5';
+  $post = array(
+  /*  'authen_dest'=> 'https://wholesale.yugcontract.ua/wholesale/main.html',*/
+  /*'login' => 'Электромир (Днепр)',*/
+  'login' => "%DD%EB%E5%EA%F2%F0%EE%EC%E8%F0+%28%C4%ED%E5%EF%F0%29",
+  'passw' => 'w48E3v2b5',
+ /* 'alien_comp' => "1",
+  'authen_hash' => "",*/
+
+
+  );
+
+
+
+$headers = [
+ 
+    "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+    "Accept-Encoding: gzip, deflate, br",
+    "Accept-Language: ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3",
+    "Location: https://opt.dclink.com.ua/",
+    "Content-Type: application/x-www-form-urlencoded",
+    /*'Keep-Alive: 115',*/
+    "Connection: keep-alive",
+   /*'Cookie:  __utma=116648256.1395392189.1598469048.1598981008.1599072559.10; __utmz=116648256.1598469048.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); __utma=62325540.1735390763.1598470402.1598470402.1598559684.2; __utmz=62325540.1598470402.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _fbp=fb.1.1598470402177.1008815383; _ga=GA1.2.1735390763.1598470402; ideatalk_session=session_id&MELOiQSCLIBlvvMWAVNUOtccJnivrnrX&hash&1fac74b46f6c3125775ea3fe165fe9be; __utmc=116648256',*/
+    /*'Content-Length:  145',*/
+    "Referer: https://wholesale.yugcontract.ua/login/",
+    "Upgrade-Insecure-Requests: 1",
+    /*'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:81.0) Gecko/20100101 Firefox/81.0',*/
+  
+
+    ];
+ 
+
+/*--------------------------------------------------------------*/
+
+// URLs
+$urls = array(
+    $url,
+    /*"http://www.mozilla.com",
+    "http://www.facebook.com"*/
+);
+
+ 
+foreach ($urls as $url1) {
+ 
+    echo "URL: $url1\n";
+ 
+    /*foreach ($browsers as $test_name => $browser) {*/
+ 
+        $ch = curl_init();
+ 
+        // установим адрес
+        curl_setopt($ch, CURLOPT_URL, $url1);
+
+ 
+         
+
+         /*$proxy = '127.0.0.1:3306';*/
+        /* $proxy = 'skm202.hostsila.org:2082';
+         
+         $proxyauth = 'root:""';
+
+         curl_setopt($ch, CURLOPT_PROXY, $proxy);*/
+         /*curl_setopt($ch, CURLOPT_PROXYUSERPWD, $proxyauth);*/
+        /*curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        */
+        
+        // Сбрасываем все установленные опции
+        /*curl_reset($ch);*/
+
+        // содержимое страницы нам не нужно
+      /* curl_setopt($ch, CURLOPT_NOBODY, 1);*/
+        curl_setopt($ch, CURLOPT_COOKIESESSION, 1);
+          
+         // откуда пришли на эту страницу
+       /* curl_setopt($ch, CURLOPT_REFERER, 'https://opt.dclink.com.ua/login.htm'); */
+
+        // нужны только заголовки
+        curl_setopt($ch, CURLOPT_HEADER, 1);
+        
+        // вернем результат, вместо его вывода
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        /*-----------------------------------------*/
+         if(strtolower((substr($url,0,5))=='https')) { // если соединяемся с https
+          curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+          curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+         }
+        /*curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);*/
+  
+        // делаем POST запрос
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        // добавляем данные
+        /*curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));*/
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+        curl_setopt($ch, CURLOPT_COOKIEJAR, __DIR__ .'/cookie1.txt');
+        curl_setopt($ch, CURLOPT_COOKIEFILE, __DIR__ .'/cookie1.txt');
+        
+
+   
+
+        // Stop session so curl can use the same session without conflicts
+          session_write_close();
+        
+         
+        // cURL будет выводить подробные сообщения о всех производимых действиях
+       /* curl_setopt($ch, CURLOPT_VERBOSE, 1);*/
+         
+    
+         /*---------------------------------------------------------*/
+
+
+           
+        
+          
+        
+
+
+        /*----------------------------------------*/
+ 
+        $output = curl_exec($ch);
+       
+
+       /* session_write_close(); *//*запрещает перезапись сессии*/
+
+
+       /* $filecontent = file_get_contents(__DIR__ .'/cookie1.txt');
+
+        var_dump($filecontent);*/
+
+       /* print_r($output);*/
+
+
+       
+
+
+        /*------------------------------------------------------------*/
+     
+      /*-------------------------------------------------------------*/
+        curl_close($ch);
+ 
+        // определим перенаправления в HTTP заголовках?
+       /* if (preg_match("!Location: (.*)!", $output, $matches)) {
+ 
+            echo "$test_name: redirects to $matches[1]\n";
+ 
+        } else {
+ 
+            echo "$test_name: no redirection\n";
+ 
+        }*/
+
+
+      /*-------------------------------------------------*/
+  
+         
+     
+
+
+   /* }*/
+    echo "\n\n";
+}
+
+
+
+
+/*-------------------------------------------*/
+ 
+        foreach ($choiseprice as $kpodcat => $valpodcat) {
+          $category_id = $kpodcat;
+
+          $url11 = $valpodcat;
+        
+          $urlpage1 = Read1($url11, $kpodcat, $db);
+        };
+
+
+
+};
+
+/*--------------------------------------------------------------*/
+  // чтение страницы после авторизации
+function Read1($url12,  $category_id, $db){
+ini_set("auto_detect_line_endings", true);
+
+ 
+  
+   echo "! ".$category_id. "! ";
+
+
+
+ 
+   /*----------------------------------------*/
+
+
+
+
+   $ch1 = curl_init();
+   curl_setopt($ch1, CURLOPT_URL, $url12);
+
+  
+
+        // укажем используемый браузер и язык
+     /*   curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                "User-Agent: {$browser['user_agent']}",
+                "Accept-Language: {$browser['language']}",
+                "Host: wholesale.yugcontract.ua",
+                "Origin: https://wholesale.yugcontract.ua",
+    
+            ));*/
+
+           $upOne2 = realpath(__DIR__.'/..');
+           
+
+          /*curl_setopt($ch, CURLOPT_COOKIEFILE, __DIR__ .'/cookie1.txt');*/
+      
+        /*curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        */
+        // нужны только заголовки
+        /*curl_setopt($ch1, CURLOPT_HEADER, 0);*/
+        
+        // содержимое страницы нам не нужно
+        /*curl_setopt($ch1, CURLOPT_NOBODY, 1);*/
+         // откуда пришли на эту страницу
+        curl_setopt($ch1, CURLOPT_REFERER, 'https://opt.dclink.com.ua/login.htm');
+        // вернем результат, вместо его вывода
+        curl_setopt($ch1, CURLOPT_RETURNTRANSFER, 1);
+        /*-----------------------------------------*/
+        curl_setopt($ch1, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch1, CURLOPT_SSL_VERIFYHOST, 0);
+      
+        // делаем POST запрос
+        /*curl_setopt($ch, CURLOPT_POST, 1);*/
+        curl_setopt($ch1, CURLOPT_FOLLOWLOCATION, 0);
+        curl_setopt($ch1, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; rv:81.0) Gecko/20100101 Firefox/81.0');
+        // добавляем данные
+        /*curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post1));*/
+        /*curl_setopt($ch1, CURLOPT_COOKIEJAR, __DIR__ .'/cookie2.txt');*/
+        curl_setopt($ch1, CURLOPT_COOKIEFILE, __DIR__ .'/cookie1.txt');
+         /*curl_setopt($ch, CURLOPT_COOKIEFILE, $upOne2 .'/StartpriceFolder/cookie1.txt');*/
+        
+        
+        
+         
+        // cURL будет выводить подробные сообщения о всех производимых действиях
+        /*curl_setopt($ch, CURLOPT_VERBOSE, 1);*/
+         
+    
+         
+        
+
+
+        /*----------------------------------------*/
+ 
+        $data = curl_exec($ch1);
+ 
+        curl_close($ch1);
+
+       /* $filecontent = file_get_contents(__DIR__ .'/cookie2.txt');
+
+        var_dump($filecontent);*/
+
+        /*print_r($data);*/
+
+Godcline($data, $category_id, $db);
+
+
+/*-----------------------------------------*/
+  /*  $isprices =R::exec( "SELECT namefile FROM katalogprice WHERE  namefile = :namefile",
+
+       array(
+          
+           ':namefile' => $namefile1, 
+       )
+    );*/
+/*--------------------------------------*/
+
+
+}
+/*--------------------------------------------------------------*/
+
+
+
+
+curl_get_content1($url,  $choiseprice, $db);
+
+
+
+

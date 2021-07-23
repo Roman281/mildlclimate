@@ -1,0 +1,461 @@
+  <?php 
+  ini_set("auto_detect_line_endings", true);
+  define('ROOT', dirname(__FILE__)); // Создаем констанну (Адрес корневой папки парсера).
+
+  /*https://skm202.hostsila.org:2083
+    wimcom 
+    R8b7iC27
+  */
+    /* php C:\OSPanel\domains\wimcoms1\startprice*/
+
+      // Подключаем авто-загрузчик классов.
+  require (ROOT . '/vendor/autoload.php');
+  require (ROOT  . '/vendor/composer/db.php');
+  require (ROOT  . '/vendor/composer/phpQuery.php');
+
+  $url = 'https://opt.dclink.com.ua/login.htm?back=/item.htm%3Fid=103';
+
+ /* $url12 = 'https://wholesale.yugcontract.ua/wholesale/list/69/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export';
+*/
+  $choiseprice = array(
+   /*'UCVelicapobuttech' =>  'https://wholesale.yugcontract.ua/wholesale/list/1186/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export',*/
+     /* 'UCMalapobuttech' => 'https://wholesale.yugcontract.ua/wholesale/list/69/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export',
+      'UCVelicapobuttech' => 'https://wholesale.yugcontract.ua/wholesale/list/1186/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/', 
+      'UCTVaudio' => 'https://wholesale.yugcontract.ua/wholesale/list/338/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/', */ 
+      'Velpobtechaksesuar' => 'https://wholesale.yugcontract.ua/wholesale/list/739/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+     /* 'Vbudpoverchinduction' => "https://wholesale.yugcontract.ua/wholesale/list/599/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/",
+      'Vbudgaspoverch' => 'https://wholesale.yugcontract.ua/wholesale/list/198/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Vbudpoverchdomino' => 'https://wholesale.yugcontract.ua/wholesale/list/201/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Vbudpoverchelectrik' => 'https://wholesale.yugcontract.ua/wholesale/list/199/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Vbudpoverchncombin' => 'https://wholesale.yugcontract.ua/wholesale/list/200/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Vbudpoverchglaskiramik' => 'https://wholesale.yugcontract.ua/wholesale/list/600/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Vbudvytajzh' => 'https://wholesale.yugcontract.ua/wholesale/list/1215/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Vbudduchgas' => 'https://wholesale.yugcontract.ua/wholesale/list/204/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Vbudduchelectric' => 'https://wholesale.yugcontract.ua/wholesale/list/203/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Vbudmicrowevepech' => 'https://wholesale.yugcontract.ua/wholesale/list/1217/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Vpudmorozil' => 'https://wholesale.yugcontract.ua/wholesale/list/1304/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Vbudposudomyki' => 'https://wholesale.yugcontract.ua/wholesale/list/205/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Vbudcholod' => 'https://wholesale.yugcontract.ua/wholesale/list/1216/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Vbudventil' => 'https://wholesale.yugcontract.ua/wholesale/list/177/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Vbudvytagkupol' => 'https://wholesale.yugcontract.ua/wholesale/list/209/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Vbudvytagplosk' => 'https://wholesale.yugcontract.ua/wholesale/list/207/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Vbudvytagpochil' => 'https://wholesale.yugcontract.ua/wholesale/list/1220/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Vbudteleskopvytag' => 'https://wholesale.yugcontract.ua/wholesale/list/208/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Vodonagr10' => 'https://wholesale.yugcontract.ua/wholesale/list/185/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Vodonagr50' => 'https://wholesale.yugcontract.ua/wholesale/list/188/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Vodonagr80' => 'https://wholesale.yugcontract.ua/wholesale/list/189/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Vodonagr100' => 'https://wholesale.yugcontract.ua/wholesale/list/187/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Vodonagrprotoch' => 'https://wholesale.yugcontract.ua/wholesale/list/186/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Condicion' => 'https://wholesale.yugcontract.ua/wholesale/list/180/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/', 
+      'Obograksesuar' => 'https://wholesale.yugcontract.ua/wholesale/list/1244/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Obogrinfrackr' => 'https://wholesale.yugcontract.ua/wholesale/list/194/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Konvetor' => 'https://wholesale.yugcontract.ua/wholesale/list/193/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Obogrevmaslan' => 'https://wholesale.yugcontract.ua/wholesale/list/191/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Obogrevvent' => 'https://wholesale.yugcontract.ua/wholesale/list/192/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/', 
+      'Sushkapoloten' => 'https://wholesale.yugcontract.ua/wholesale/list/1358/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Osvezhvair' => 'https://wholesale.yugcontract.ua/wholesale/list/195/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Plity' => 'https://wholesale.yugcontract.ua/wholesale/list/89/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Posudomyka' => 'https://wholesale.yugcontract.ua/wholesale/list/94/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Pralnmashvert' => 'https://wholesale.yugcontract.ua/wholesale/list/74/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Pralnmashsemiautom' => 'https://wholesale.yugcontract.ua/wholesale/list/73/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Pralnsushmash' => 'https://wholesale.yugcontract.ua/wholesale/list/489/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Sushapparat' => 'https://wholesale.yugcontract.ua/wholesale/list/72/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Pralnmash30' => 'https://wholesale.yugcontract.ua/wholesale/list/75/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Pralnmash45' => 'https://wholesale.yugcontract.ua/wholesale/list/76/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Pralnmash50' => 'https://wholesale.yugcontract.ua/wholesale/list/71/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Pralnmash60' => 'https://wholesale.yugcontract.ua/wholesale/list/77/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Pralnmash61' => 'https://wholesale.yugcontract.ua/wholesale/list/70/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Holodcamer' => 'https://wholesale.yugcontract.ua/wholesale/list/83/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Morozlary' => 'https://wholesale.yugcontract.ua/wholesale/list/84/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Hodilportat' => 'https://wholesale.yugcontract.ua/wholesale/list/1199/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Holodvitryn' => 'https://wholesale.yugcontract.ua/wholesale/list/1355/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Holod85' => 'https://wholesale.yugcontract.ua/wholesale/list/82/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'HolodW' => 'https://wholesale.yugcontract.ua/wholesale/list/80/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'HolodWcamer' => 'https://wholesale.yugcontract.ua/wholesale/list/78/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Holodvine' => 'https://wholesale.yugcontract.ua/wholesale/list/1143/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Holodcombi' => 'https://wholesale.yugcontract.ua/wholesale/list/79/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Holododnocam' => 'https://wholesale.yugcontract.ua/wholesale/list/81/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'DribnpobutAcc' => 'https://wholesale.yugcontract.ua/wholesale/list/495/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Blander' => 'https://wholesale.yugcontract.ua/wholesale/list/218/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Bigudy' => 'https://wholesale.yugcontract.ua/wholesale/list/1173/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Vypramitvolos' => 'https://wholesale.yugcontract.ua/wholesale/list/113/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Grebnicivolos' => 'https://wholesale.yugcontract.ua/wholesale/list/1149/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Multistaler' => 'https://wholesale.yugcontract.ua/wholesale/list/115/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Ployki' => 'https://wholesale.yugcontract.ua/wholesale/list/116/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'FenBrash' => 'https://wholesale.yugcontract.ua/wholesale/list/756/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Fen'  => 'https://wholesale.yugcontract.ua/wholesale/list/112/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Fentravel' => 'https://wholesale.yugcontract.ua/wholesale/list/114/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'BritvaAcc' => 'https://wholesale.yugcontract.ua/wholesale/list/227/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Britvawomen' => 'https://wholesale.yugcontract.ua/wholesale/list/1197/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Britvaman' => 'https://wholesale.yugcontract.ua/wholesale/list/226/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Elchankeram' => 'https://wholesale.yugcontract.ua/wholesale/list/213/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Elchanmetall' => 'https://wholesale.yugcontract.ua/wholesale/list/212/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Elchanplastik' => 'https://wholesale.yugcontract.ua/wholesale/list/211/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Elchanglas' => 'https://wholesale.yugcontract.ua/wholesale/list/214/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Elchantravel' => 'https://wholesale.yugcontract.ua/wholesale/list/216/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Eltermos' => 'https://wholesale.yugcontract.ua/wholesale/list/215/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Epelator' => 'https://wholesale.yugcontract.ua/wholesale/list/111/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Kavavarky' => 'https://wholesale.yugcontract.ua/wholesale/list/494/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Kombain' => 'https://wholesale.yugcontract.ua/wholesale/list/135/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'KochAcc' => 'https://wholesale.yugcontract.ua/wholesale/list/1296/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Blinnic' => 'https://wholesale.yugcontract.ua/wholesale/list/1126/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Buterbrod' => 'https://wholesale.yugcontract.ua/wholesale/list/124/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Vagykuch' => 'https://wholesale.yugcontract.ua/wholesale/list/125/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Vakuum' => 'https://wholesale.yugcontract.ua/wholesale/list/1294/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Gril' => 'https://wholesale.yugcontract.ua/wholesale/list/126/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Elpech' => 'https://wholesale.yugcontract.ua/wholesale/list/130/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Electrosushka' => 'https://wholesale.yugcontract.ua/wholesale/list/134/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Yogurtci' => 'https://wholesale.yugcontract.ua/wholesale/list/127/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'KuchonAcc' => 'https://wholesale.yugcontract.ua/wholesale/list/132/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Lomterezka' => 'https://wholesale.yugcontract.ua/wholesale/list/128/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Mixbezchashy' => 'https://wholesale.yugcontract.ua/wholesale/list/133/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Mixzchashy' => 'https://wholesale.yugcontract.ua/wholesale/list/122/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Morozhen' => 'https://wholesale.yugcontract.ua/wholesale/list/766/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Plitainuccinz' => 'https://wholesale.yugcontract.ua/wholesale/list/1206/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Plytkael' => 'https://wholesale.yugcontract.ua/wholesale/list/573/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Podrin' => 'https://wholesale.yugcontract.ua/wholesale/list/1330/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Skorovarki' => 'https://wholesale.yugcontract.ua/wholesale/list/129/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Terky' => 'https://wholesale.yugcontract.ua/wholesale/list/1170/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Tostery' => 'https://wholesale.yugcontract.ua/wholesale/list/121/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Friturnicy' => 'https://wholesale.yugcontract.ua/wholesale/list/123/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Masorubky' => 'https://wholesale.yugcontract.ua/wholesale/list/146/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Mcpech' => 'https://wholesale.yugcontract.ua/wholesale/list/85/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Naborydlastrizhki' => 'https://wholesale.yugcontract.ua/wholesale/list/119/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Trimmery' => 'https://wholesale.yugcontract.ua/wholesale/list/120/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Trimmerynos' => 'https://wholesale.yugcontract.ua/wholesale/list/118/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Multivarky' => 'https://wholesale.yugcontract.ua/wholesale/list/131/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Parovarky' => 'https://wholesale.yugcontract.ua/wholesale/list/222/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Pylososy' => 'https://wholesale.yugcontract.ua/wholesale/list/98/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Utugy' => 'https://wholesale.yugcontract.ua/wholesale/list/103/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Pryladosobystcorystuv' => 'https://wholesale.yugcontract.ua/wholesale/list/491/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Sokovyzhim' => 'https://wholesale.yugcontract.ua/wholesale/list/142/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Hlebopech' => 'https://wholesale.yugcontract.ua/wholesale/list/149/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Shveyniemash' => 'https://wholesale.yugcontract.ua/wholesale/list/1248/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'TV15' => 'https://wholesale.yugcontract.ua/wholesale/list/361/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'TV21' => 'https://wholesale.yugcontract.ua/wholesale/list/362/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'TV32' => 'https://wholesale.yugcontract.ua/wholesale/list/363/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'TV37' => 'https://wholesale.yugcontract.ua/wholesale/list/364/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'TV40' => 'https://wholesale.yugcontract.ua/wholesale/list/366/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      "MP3" => 'https://wholesale.yugcontract.ua/wholesale/list/499/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'KabelTvAudio' => 'https://wholesale.yugcontract.ua/wholesale/list/395/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Naushnik' => 'https://wholesale.yugcontract.ua/wholesale/list/392/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Kreplenia' => 'https://wholesale.yugcontract.ua/wholesale/list/390/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Portatyvacustyc' => 'https://wholesale.yugcontract.ua/wholesale/list/1174/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Radiopriemnik' => 'https://wholesale.yugcontract.ua/wholesale/list/1262/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',*/
+      'TVantenny' => 'https://wholesale.yugcontract.ua/wholesale/list/391/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      /*'PlanshetyAcc' => 'https://wholesale.yugcontract.ua/wholesale/list/562/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',*/
+      'Dictafony' => 'https://wholesale.yugcontract.ua/wholesale/list/347/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      /*'DomKinoteatr' => 'https://wholesale.yugcontract.ua/wholesale/list/339/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Muzcenter' => 'https://wholesale.yugcontract.ua/wholesale/list/549/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Radiochasy' => 'https://wholesale.yugcontract.ua/wholesale/list/1212/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Tuner' => 'https://wholesale.yugcontract.ua/wholesale/list/755/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Pylososportativ' => 'https://wholesale.yugcontract.ua/wholesale/list/1092/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',
+      'Vbudduchovky' => 'https://wholesale.yugcontract.ua/wholesale/list/202/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/export/',*/
+
+      /*https://wholesale.yugcontract.ua/wholesale/list/#128/fac-n/fpt-n/fsr-n/fst-n/fwh-n/l100/sdir-asc/sort-price_uah/*/
+
+
+
+
+
+  );
+
+
+
+
+  /*$dateFilter = $_POST;
+
+    $mainfilter =$dateFilter['tablearr'];
+
+
+   $exicut1 = array_filter($mainfilter, function($v, $k) {
+      return  $v == "true";
+  }, ARRAY_FILTER_USE_BOTH);*/  /*через ajax передавалось адрес таблиц, которые нужно спарсить*/
+
+
+
+
+
+
+
+
+
+
+
+  function curl_get_content1($url, $choiseprice, $exicut1){
+
+   
+  $post_data = 'login=%DD%EB%E5%EA%F2%F0%EE%EC%E8%F0+%28%C4%ED%E5%EF%F0%29&passw=w48E3v2b5';
+  $post = array(
+  /*  'authen_dest'=> 'https://wholesale.yugcontract.ua/wholesale/main.html',*/
+  'login' => '%DD%EB%E5%EA%F2%F0%EE%EC%E8%F0+%28%C4%ED%E5%EF%F0%29',
+  'passw' => 'w48E3v2b5',
+ /* 'alien_comp' => "1",
+  'authen_hash' => "",*/
+
+  );
+
+  $headers = [
+   
+      "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+      "Accept-Encoding: gzip, deflate, br",
+      "Accept-Language: ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3",
+      "Location: https://opt.dclink.com.ua/item.htm?id=103",
+      "Content-Type: application/x-www-form-urlencoded",
+      /*'Keep-Alive: 115',*/
+      "Connection: keep-alive",
+     /*'Cookie
+  __utma=62325540.642598645.1604409703.1605776876.1605788760.21; __utmz=62325540.1605788760.21.3.utmcsr=wholesale.yugcontract.ua|utmccn=(referral)|utmcmd=referral|utmcct=/wholesale/list/; __utma=116648256.1990917177.1604409811.1605798957.1605859221.20; __utmz=116648256.1604409811.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); ideatalk_session=session_id&waRLIDWKxrRKEvtRoGObkVWPmzjfNLtQ&hash&3d0c1aa478b4618604e578f1b058bc93; __utmb=116648256.2.10.1605859221; __utmc=116648256,*/
+      /*'Content-Length:  145',*/
+      "Referer: https://opt.dclink.com.ua/login.htm?back=/item.htm%3Fid=103",
+      "Upgrade-Insecure-Requests: 1",
+      "User-Agent: Mozilla/5.0 (Windows NT 6.1; rv:84.0) Gecko/20100101 Firefox/84.0",
+    
+
+      ];
+   
+
+  /*--------------------------------------------------------------*/
+
+  // URLs
+  $urls = array(
+      $url,
+      /*"http://www.mozilla.com",
+      "http://www.facebook.com"*/
+  );
+  // браузеры
+  $browsers = array(
+   
+
+
+      "standard" => array (
+          "user_agent" => "Mozilla/5.0 (Windows NT 6.1; rv:84.0) Gecko/20100101 Firefox/84.0",
+          "language" => "ru-RU,ru;q=0.8,en-US;q=0.5,en;q=0.3",
+          "Accept-Encoding" => "gzip, deflate, br",
+          "Referer" => "https://opt.dclink.com.ua/login.htm?back=/item.htm%3Fid=103",
+
+          ),
+   
+    /*  "iphone" => array (
+          "user_agent" => "Mozilla/5.0 (iPhone; U; CPU like Mac OS X; en) AppleWebKit/420+ (KHTML, like Gecko) Version/3.0 Mobile/1A537a Safari/419.3",
+          "language" => "en"
+          ),
+   
+      "french" => array (
+          "user_agent" => "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; GTB6; .NET CLR 2.0.50727)",
+          "language" => "fr,fr-FR;q=0.5"
+          )
+   */
+  );
+   
+  foreach ($urls as $url1) {
+   
+      echo "URL: $url1\n";
+   
+      foreach ($browsers as $test_name => $browser) {
+   
+          $ch = curl_init();
+   
+          // установим адрес
+          curl_setopt($ch, CURLOPT_URL, $url1);
+   echo $url1;
+          // укажем используемый браузер и язык
+       /*   curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                  "User-Agent: {$browser['user_agent']}",
+                  "Accept-Language: {$browser['language']}",
+                  "Host: wholesale.yugcontract.ua",
+                  "Origin: https://wholesale.yugcontract.ua",
+      
+              ));*/
+           curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+              "User-Agent: {$browser['user_agent']}",
+              "Accept-Language: {$browser['language']}",
+            "Host: opt.dclink.com.ua",
+            "Origin: https://opt.dclink.com.ua",
+
+          ));  
+          /*curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+          */
+          // содержимое страницы нам не нужно
+          curl_setopt($ch, CURLOPT_NOBODY, 1);
+   
+          // нужны только заголовки
+          curl_setopt($ch, CURLOPT_HEADER, true);
+   
+          // вернем результат, вместо его вывода
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);// возвратить то что вернул сервер
+          /*-----------------------------------------*/
+          curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+          curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        
+          // делаем POST запрос
+          curl_setopt($ch, CURLOPT_POST, 1);
+          curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+          // добавляем данные
+          curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
+          curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+          
+          curl_setopt($ch, CURLOPT_COOKIEJAR, __DIR__ .'/cookie2.txt');
+          curl_setopt($ch, CURLOPT_COOKIEFILE, __DIR__ .'/cookie2.txt');
+          
+          
+          
+           
+          // cURL будет выводить подробные сообщения о всех производимых действиях
+         /* curl_setopt($ch, CURLOPT_VERBOSE, 1);
+           */
+      
+           
+          
+
+
+          /*----------------------------------------*/
+   
+          $output = curl_exec($ch);
+   
+          curl_close($ch);
+       /* echo $output;*/
+          // определим перенаправления в HTTP заголовках?
+          if (preg_match("!Location: (.*)!", $output, $matches)) {
+   
+              echo "$test_name: redirects to $matches[1]\n";
+   
+          } else {
+   
+              echo "$test_name: no redirection\n";
+   
+          }
+
+          /*echo $output;*/
+          /*var_dump($output);*/
+   
+          /*return $output;*/
+      }
+      echo "\n\n";
+  }
+
+  foreach ($choiseprice as $key => $value) {
+          $url11 = $choiseprice[$key];
+          
+          /*$urlpage1 = Read1($url11, $key);*/
+  };
+
+
+
+  };
+
+  /*--------------------------------------------------------------*/
+    // чтение страницы после авторизации
+  function Read1($url12, $namefile){
+  ini_set("auto_detect_line_endings", true);
+      $katalogprice = R::dispense('katalogprice'); /*создаем в базе данных таблицу*/
+      $katalogprice->category = $namefile;
+    /*Задаем имя файла*/  
+    $namefile2 = $namefile;
+    /*$namefile1 = $namefile2.date("d.m.y").".csv";*/
+    /*$namefile1 = $namefile2.date("d.m.y").".json";*/
+    /*$namefile1 = $namefile2.date("d.m.y").".txt";*/
+    $namefile1 = $namefile2.".xlsx";
+     /*$path = __DIR__ .'/LoadFile/file1.xls';*/
+     $uploaddir = __DIR__ ."/LoadFile/Price/"; // . - текущая папка где находится submit.php
+     if( ! is_dir( $uploaddir ) ) 
+      {
+          mkdir( $uploaddir, 0777, true );
+          /*$katalogprice->namefolder = 'Price '.date("dmY");*/
+      } else /*$katalogprice->namefolder = 'Price '.date("dmY");*/
+      $path = __DIR__ .'/LoadFile/Price/'.$namefile1;
+    
+      $katalogprice->namefile = $namefile1;
+
+
+
+   
+     /*----------------------------------------*/
+
+
+
+
+     $ch = curl_init();
+     curl_setopt($ch, CURLOPT_URL, $url12);
+     // откуда пришли на эту страницу
+    /* curl_setopt($ch, CURLOPT_REFERER, $url12);*/
+       curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+              "User-Agent: {$browser['user_agent']}",
+              "Accept-Language: {$browser['language']}",
+              "User-Agent: Mozilla/5.0 (Windows NT 6.1; rv:84.0) Gecko/20100101 Firefox/84.0",
+              'content-type:application/csv;charset=UTF-8',
+             
+          /*  "Host: wholesale.yugcontract.ua",
+            "Origin: https://wholesale.yugcontract.ua",*/
+            "Cookie: __utma=62325540.642598645.1604409703.1605776876.1605788760.21; __utmz=62325540.1605788760.21.3.utmcsr=wholesale.yugcontract.ua|utmccn=(referral)|utmcmd=referral|utmcct=/wholesale/list/; __utma=116648256.1990917177.1604409811.1605798957.1605859221.20; __utmz=116648256.1604409811.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); ideatalk_session=session_id&waRLIDWKxrRKEvtRoGObkVWPmzjfNLtQ&hash&3d0c1aa478b4618604e578f1b058bc93; __utmb=116648256.2.10.1605859221; __utmc=116648256",
+                    
+
+
+          ));
+       /*-------------------------------------------------------*/
+       // нужны только заголовки
+          curl_setopt($ch, CURLOPT_HEADER, false);
+   
+          // вернем результат, вместо его вывода
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+          /*-----------------------------------------*/
+          curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+          curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        
+          // делаем POST запрос
+          curl_setopt($ch, CURLOPT_POST, 1);
+          curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+          // добавляем данные
+          /*curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post1));*/
+         /* curl_setopt($ch, CURLOPT_COOKIEJAR, __DIR__ .'/cookie.txt');*/
+          curl_setopt($ch, CURLOPT_COOKIEFILE, __DIR__ .'/cookie.txt');
+          
+          
+           
+          // cURL будет выводить подробные сообщения о всех производимых действиях
+         /* curl_setopt($ch, CURLOPT_VERBOSE, 1);*/
+
+       /*------------------------------------------------------*/
+
+
+    /* $result = curl_exec($ch);
+    echo  $result;
+     curl_close($ch);*/
+  $data = curl_exec($ch);
+  /*iconv( mb_detect_encoding( $data ), 'Windows-1252', $data );*/
+
+  echo shell_exec('C:\OSPanel\domains\wimcomcart\vendor\composer\phantomjs.exe C:\OSPanel\domains\wimcomcart\parseMethods\parstest9.js');
+
+
+
+  curl_close($ch);
+
+
+
+
+  file_put_contents($path, $data);
+
+
+  /*file_put_contents($path, $data);*/
+     /*return $result;*/
+  /*-----------------------------------------*/
+    /*  $isprices =R::exec( "SELECT namefile FROM katalogprice WHERE  namefile = :namefile",
+
+         array(
+            
+             ':namefile' => $namefile1, 
+         )
+      );*/
+  /*--------------------------------------*/
+
+
+  }
+  /*--------------------------------------------------------------*/
+
+
+
+
+  curl_get_content1($url,  $choiseprice, $exicut1);
+
+
+

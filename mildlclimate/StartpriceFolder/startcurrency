@@ -1,0 +1,72 @@
+<?php 
+ini_set("auto_detect_line_endings", true);
+/*define('ROOT', dirname(__FILE__));*/ // Создаем констанну (Адрес корневой папки парсера).
+$upOne = realpath(__DIR__.'/..'); 
+$upTwo = realpath(__DIR__.'/../../..'); 
+
+
+
+    // Подключаем авто-загрузчик классов.
+require ($upOne . '/vendor/autoload.php');
+require ($upOne  . '/vendor/composer/db1.php');
+require ($upOne  . '/vendor/composer/phpQuery.php');
+require ($upOne  . '/vendor/composer/DBMysqli.php');
+
+require ($upOne  . '/parseMethods2/parscurrency.php');
+/*require ($upOne  . '/parseMethods2/parsdcline1.php');*/
+
+$db = new DB('127.0.0.1','root','', 'midlclimate', '3306');
+/*$db = new DB('localhost','wimcom_comwim','db301020cart', 'wimcom_webpr', '3306');*/
+
+
+
+
+
+
+
+/*$url =  'https://opt.dclink.com.ua/login.htm?back=/';*/
+
+
+
+
+
+/*-------------------------------------------*/
+$choiseprice = array(
+    
+           
+          1 => 'https://minfin.com.ua/ua/currency/usd/',
+
+         
+);
+
+
+
+/*$dateFilter = $_POST;
+
+  $mainfilter =$dateFilter['tablearr'];
+
+
+ $exicut1 = array_filter($mainfilter, function($v, $k) {
+    return  $v == "true";
+}, ARRAY_FILTER_USE_BOTH);*/  /*через ajax передавалось адрес таблиц, которые нужно спарсить*/
+
+
+
+
+
+
+
+
+
+
+
+/*--------------------------------------------------------------*/
+
+
+
+
+Parscurrency($url,  $choiseprice, $db);
+
+
+
+
